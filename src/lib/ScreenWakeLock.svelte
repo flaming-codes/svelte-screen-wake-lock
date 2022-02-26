@@ -44,7 +44,7 @@
 	 * `ref.release()`.
 	 */
 	export function release() {
-		sentinel.release();
+		sentinel?.release();
 		sentinel = null;
 	}
 
