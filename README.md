@@ -1,6 +1,6 @@
 # Svelte Screen Wake Lock API
 
-This headless component allows you to use the [Screen Wake Lock API](https://web.dev/wake-lock/) to progressively enhance your PWA. Using the **Screen Wake Lock API** allows you to keep the display from dimming and shutting down, if both the browser supprots it as well as the OS allows it (e.g. user not in battery-save-mode).
+This headless component allows you to use the [Screen Wake Lock API](https://web.dev/wake-lock/) to progressively enhance your PWA. Using the **Screen Wake Lock API** allows you to keep the display from dimming and shutting down, if both the browser as well as the OS allow it (e.g. user not in battery-save-mode).
 
 ## Install
 
