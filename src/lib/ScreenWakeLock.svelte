@@ -29,8 +29,8 @@
 
 		try {
 			sentinel = await navigator.wakeLock.request();
-			sentinel.addEventListener('change', () =>
-				dispatch('released', { released: sentinel.released })
+			sentinel.addEventListener('release', () =>
+				dispatch('change', { released: sentinel.released })
 			);
 			dispatch('change', { released: sentinel.released });
 		} catch (error) {
