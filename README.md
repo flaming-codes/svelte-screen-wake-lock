@@ -5,7 +5,7 @@ This headless component allows you to use the [Screen Wake Lock API](https://web
 ## Install
 
 ```text
-npm i svelte-screen-wake-lock
+  npm i svelte-screen-wake-lock
 ```
 
 ## Usage
@@ -16,7 +16,7 @@ Simply important the component and mount it. Without any further configuration, 
 
 ```svelte
 <script lang="ts">
-import { ScreenWakeLock } from "@fcx/screen-wake-lock";
+  import { ScreenWakeLock } from "svelte-screen-wake-lock";
 </script>
 
 <ScreenWakeLock />
@@ -28,7 +28,7 @@ You can disble both the automatic request on mount as well as release of the loc
 
 ```svelte
 <script lang="ts">
-import { ScreenWakeLock } from "@fcx/screen-wake-lock";
+  import { ScreenWakeLock } from "svelte-screen-wake-lock";
 </script>
 
 <ScreenWakeLock lockOnMountDisabled unlockOnMountDisabled />
@@ -42,20 +42,20 @@ You can also listen to dispatched events for the following use cases:
 
 | Event | Value | Description |
 | --- | --- | --- |
-| on:released | `Boolean` | Flag if the lock is released. `false` means it's not released (i.e. active).
-| on:error | `Error` | Error event if somehting didn't work or the API isn't supported.
+| on:released | `Boolean` | Flag if the lock is released. `false` means it's not released (i.e. active). |
+| on:error | `Error` | Error event if somehting didn't work or the API isn't supported. |
 
 ```svelte
 <script lang="ts">
-import { ScreenWakeLock } from "@fcx/screen-wake-lock";
+  import { ScreenWakeLock } from "svelte-screen-wake-lock";
 
-const onRelease = (event) => {
+  const onRelease = (event) => {
     console.log("SRL change", event.detail);
-}
+  }
 
-const onError = (event) => {
+  const onError = (event) => {
     console.log("SRL error", event.detail);
-}
+  }
 </script>
 
 <ScreenWakeLock on:released={onReleased} on:error={onError} />
@@ -67,12 +67,12 @@ Finally, you can also directly access the instance and use the components variab
 
 ```svelte
 <script lang="ts">
-import { ScreenWakeLock } from "@fcx/screen-wake-lock";
+  import { ScreenWakeLock } from "svelte-screen-wake-lock";
 
-let ref;
+  let ref;
 
-// Access the component's props.
-// ref. ...
+  // Access the component's props.
+  // ref. ...
 </script>
 
 <ScreenWakeLock bind:this={ref} />
