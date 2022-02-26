@@ -1,78 +1,80 @@
 <script lang="ts">
-	import type { WakeLockSentinel } from 'src/types';
-	import { onDestroy, onMount, createEventDispatcher } from 'svelte';
+  import { browser } from "$app/env";
 
-	/**
-	 * Disable the automatic request to lock
-	 * the wake screen on mount of the component.
-	 */
-	export let lockOnMountDisabled: boolean = undefined;
-	/**
-	 * Disable the automatic release of the lock.
-	 * Note: using this prop can lead to memory leaks.
-	 */
-	export let unlockOnMountDisabled: boolean = undefined;
+  import type { WakeLockSentinel } from "src/types";
+  import { onDestroy, onMount, createEventDispatcher } from "svelte";
 
-	/**
-	 * Captured reference to control and
-	 * lsiten to lock.
-	 */
-	let sentinel: WakeLockSentinel = null;
+  /**
+   * Disable the automatic request to lock
+   * the wake screen on mount of the component.
+   */
+  export let lockOnMountDisabled: boolean = undefined;
+  /**
+   * Disable the automatic release of the lock.
+   * Note: using this prop can lead to memory leaks.
+   */
+  export let unlockOnMountDisabled: boolean = undefined;
 
-	const dispatch = createEventDispatcher();
+  /**
+   * Captured reference to control and
+   * lsiten to lock.
+   */
+  let sentinel: WakeLockSentinel = null;
 
-	export async function requestWakeLock() {
-		if (!('wakeLock' in navigator)) {
-			dispatch('error', new Error('unsupported'));
-			return;
-		}
+  const dispatch = createEventDispatcher();
 
-		try {
-			sentinel = await navigator.wakeLock.request();
-			sentinel.addEventListener('release', () =>
-				dispatch('change', { released: sentinel.released })
-			);
-			dispatch('change', { released: sentinel.released });
-		} catch (error) {
-			dispatch('error', error);
-		}
-	}
+  export async function requestWakeLock() {
+    if (!("wakeLock" in navigator)) {
+      dispatch("error", new Error("unsupported"));
+      return;
+    }
 
-	/**
-	 * Manually release the lock. Can be access by
-	 * using `bind:this={ref}` and the calling
-	 * `ref.release()`.
-	 */
-	export function release() {
-		sentinel?.release();
-		sentinel = null;
-	}
+    try {
+      sentinel = await navigator.wakeLock.request();
+      sentinel.addEventListener("release", () =>
+        dispatch("change", { released: sentinel.released })
+      );
+      dispatch("change", { released: sentinel.released });
+    } catch (error) {
+      dispatch("error", error);
+    }
+  }
 
-	/**
-	 * React to visibiltiy changes, i.e. if the user
-	 * selects another tab and later returns to your
-	 * page that hosts the sentinel.
-	 */
-	async function onVisibilityChange() {
-		if (sentinel !== null && document.visibilityState === 'visible') {
-			await requestWakeLock();
-		}
-	}
+  /**
+   * Manually release the lock. Can be access by
+   * using `bind:this={ref}` and the calling
+   * `ref.release()`.
+   */
+  export function release() {
+    sentinel?.release();
+    sentinel = null;
+  }
 
-	/**
-	 * Automatically use lock on mount, if not specifiied
-	 * otherwise in props.
-	 */
-	onMount(async () => {
-		if (!lockOnMountDisabled) await requestWakeLock();
-		document.addEventListener('visibilitychange', onVisibilityChange);
-	});
+  /**
+   * React to visibiltiy changes, i.e. if the user
+   * selects another tab and later returns to your
+   * page that hosts the sentinel.
+   */
+  async function onVisibilityChange() {
+    if (sentinel !== null && document.visibilityState === "visible") {
+      await requestWakeLock();
+    }
+  }
 
-	/**
-	 * Clean up on unmount, if not specified otherwise.
-	 */
-	onDestroy(() => {
-		if (!unlockOnMountDisabled) release();
-		document.removeEventListener('visibilitychange', onVisibilityChange);
-	});
+  /**
+   * Automatically use lock on mount, if not specifiied
+   * otherwise in props.
+   */
+  onMount(async () => {
+    if (!lockOnMountDisabled) await requestWakeLock();
+    if (browser) document.addEventListener("visibilitychange", onVisibilityChange);
+  });
+
+  /**
+   * Clean up on unmount, if not specified otherwise.
+   */
+  onDestroy(() => {
+    if (!unlockOnMountDisabled) release();
+    if (browser) document.removeEventListener("visibilitychange", onVisibilityChange);
+  });
 </script>
