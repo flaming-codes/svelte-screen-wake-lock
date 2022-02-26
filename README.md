@@ -1,40 +1,79 @@
-# create-svelte
+# Svelte Screen Wake Lock API
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+This headless component allows you to use the [Screen Wake Lock API](https://web.dev/wake-lock/) to progressively enhance your PWA. Using the **Screen Wake Lock API** allows you to keep the display from dimming and shutting down, if both the browser supprots it as well as the OS allows it (e.g. user not in battery-save-mode).
 
-## Creating a project
+## Install
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm init svelte@next
-
-# create a new project in my-app
-npm init svelte@next my-app
+```text
+npm i svelte-screen-wake-lock
 ```
 
-> Note: the `@next` is temporary
+## Usage
 
-## Developing
+### Basic
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Simply important the component and mount it. Without any further configuration, the component will request to keep the screen on.
 
-```bash
-npm run dev
+```svelte
+<script lang="ts">
+import { ScreenWakeLock } from "@fcx/screen-wake-lock";
+</script>
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+<ScreenWakeLock />
 ```
 
-## Building
+### Un-/Mount effects
 
-To create a production version of your app:
+You can disble both the automatic request on mount as well as release of the lock on unmount.
 
-```bash
-npm run build
+```svelte
+<script lang="ts">
+import { ScreenWakeLock } from "@fcx/screen-wake-lock";
+</script>
+
+<ScreenWakeLock lockOnMountDisabled unlockOnMountDisabled />
 ```
 
-You can preview the production build with `npm run preview`.
+### Events
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+You can also listen to dispatched events for the following use cases:
+- release event
+- error event
+
+| Event | Value | Description |
+| --- | --- | --- |
+| on:released | `Boolean` | Flag if the lock is released. `false` means it's not released (i.e. active).
+| on:error | `Error` | Error event if somehting didn't work or the API isn't supported.
+
+```svelte
+<script lang="ts">
+import { ScreenWakeLock } from "@fcx/screen-wake-lock";
+
+const onRelease = (event) => {
+    console.log("SRL change", event.detail);
+}
+
+const onError = (event) => {
+    console.log("SRL error", event.detail);
+}
+</script>
+
+<ScreenWakeLock on:released={onReleased} on:error={onError} />
+```
+
+### Instance access
+
+Finally, you can also directly access the instance and use the components variables directly.
+
+```svelte
+<script lang="ts">
+import { ScreenWakeLock } from "@fcx/screen-wake-lock";
+
+let ref;
+
+// Access the component's props.
+// ref. ...
+</script>
+
+<ScreenWakeLock bind:this={ref} />
+```

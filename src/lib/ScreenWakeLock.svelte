@@ -1,4 +1,5 @@
 <script lang="ts">
+	import type { WakeLockSentinel } from 'src/types';
 	import { onDestroy, onMount, createEventDispatcher } from 'svelte';
 
 	/**
@@ -16,15 +17,22 @@
 	 * Captured reference to control and
 	 * lsiten to lock.
 	 */
-	let sentinel = null;
+	let sentinel: WakeLockSentinel = null;
 
 	const dispatch = createEventDispatcher();
 
 	export async function requestWakeLock() {
+		if (!('wakeLock' in navigator)) {
+			dispatch('error', new Error('unsupported'));
+			return;
+		}
+
 		try {
-			sentinel = await (navigator as any).wakeLock.request();
-			sentinel.addEventListener('release', () => dispatch('released', sentinel.released));
-			dispatch('released', sentinel.released);
+			sentinel = await navigator.wakeLock.request();
+			sentinel.addEventListener('change', () =>
+				dispatch('released', { released: sentinel.released })
+			);
+			dispatch('change', { released: sentinel.released });
 		} catch (error) {
 			dispatch('error', error);
 		}
