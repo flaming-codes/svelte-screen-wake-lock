@@ -12,7 +12,7 @@ This headless component allows you to use the [Screen Wake Lock API](https://web
 
 ### Basic
 
-Simply important the component and mount it. Without any further configuration, the component will request to keep the screen on.
+Simply import the component and mount it. Without any further configuration, the component will request to keep the screen on.
 
 ```svelte
 <script lang="ts">
@@ -24,7 +24,7 @@ Simply important the component and mount it. Without any further configuration, 
 
 ### Un-/Mount effects
 
-You can disble both the automatic request on mount as well as release of the lock on unmount.
+You can disable both the automatic request on mount as well as release of the lock on unmount.
 
 ```svelte
 <script lang="ts">
@@ -40,28 +40,28 @@ You can also listen to dispatched events for the following use cases:
 
 | Event | Value | Description |
 | --- | --- | --- |
-| on:released | `Boolean` | Flag if the lock is released. `false` means it's not released (i.e. active). |
+| on:change | `{ released: boolean }` | Object w/ flag if the lock is released. `false` means it's not released, i.e. active. |
 | on:error | `Error` | Error event if somehting didn't work or the API isn't supported. |
 
 ```svelte
 <script lang="ts">
   import { ScreenWakeLock } from "svelte-screen-wake-lock";
 
-  const onRelease = (event) => {
-    console.log("SRL change", event.detail);
+  const onChange = (event) => {
+    console.log("SWL change", event.detail);
   }
 
   const onError = (event) => {
-    console.log("SRL error", event.detail);
+    console.log("SWL error", event.detail);
   }
 </script>
 
-<ScreenWakeLock on:released={onReleased} on:error={onError} />
+<ScreenWakeLock on:change={onChange} on:error={onError} />
 ```
 
 ### Instance access
 
-Finally, you can also directly access the instance and use the components variables directly.
+Finally, you can also directly access the instance and use the component's variables directly.
 
 ```svelte
 <script lang="ts">
