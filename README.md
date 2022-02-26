@@ -37,8 +37,6 @@ You can disble both the automatic request on mount as well as release of the loc
 ### Events
 
 You can also listen to dispatched events for the following use cases:
-- release event
-- error event
 
 | Event | Value | Description |
 | --- | --- | --- |
