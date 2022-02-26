@@ -5,7 +5,7 @@ This headless component allows you to use the [Screen Wake Lock API](https://web
 ## Install
 
 ```text
-  npm i -D svelte-screen-wake-lock
+npm i -D svelte-screen-wake-lock
 ```
 
 ## Usage
