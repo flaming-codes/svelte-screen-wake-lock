@@ -1,5 +1,5 @@
 {
-  "version": "1.0.8",
+  "version": "1.0.9",
   "name": "svelte-screen-wake-lock",
   "description": "Svelte component to use the Screen Wake Lock API to progressively enhance the app",
   "keywords": [
